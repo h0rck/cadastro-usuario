@@ -1,4 +1,11 @@
-package com.adivinha.cadastro_usuario.infrastructure.entitys;
+package com.adivinha.cadastro_usuario.infra.entitys;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +26,7 @@ import lombok.Setter;
 @Builder
 @Table(name = "usuarios")
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,5 +39,23 @@ public class Usuario {
 
     @Column(name = "senha")
     private String senha;
+
+    @Column(name = "role")
+    private String role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role));
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
 }
