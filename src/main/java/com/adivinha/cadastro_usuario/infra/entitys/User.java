@@ -24,9 +24,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "usuarios")
+@Table(name = "users")
 @Entity
-public class Usuario implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -42,6 +42,14 @@ public class Usuario implements UserDetails {
 
     @Column(name = "role")
     private String role;
+
+
+    public User(String nome,String email,String senha,String role){
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
