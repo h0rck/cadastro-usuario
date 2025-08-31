@@ -1,18 +1,16 @@
 networks:
-  event-driven-net:
-    external: true
-    name: event-driven-net
+  dev-net:
+    driver: bridge
 
 services:
-  payments-service:
+  api-java:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      NODE_ENV: development
-      PORT: 8082
+    ports:
+      - 8082:8082
     volumes:
       - .:/app
     networks:
-      - event-driven-net
+      - dev-net
     restart: always
