@@ -15,6 +15,7 @@ import com.adivinha.cadastro_usuario.domain.dto.AuthDTO;
 import com.adivinha.cadastro_usuario.domain.dto.RegisterDTO;
 import com.adivinha.cadastro_usuario.infra.entitys.User;
 import com.adivinha.cadastro_usuario.infra.repository.UserRepository;
+import com.adivinha.cadastro_usuario.infra.security.TokenService;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,11 +27,16 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Validated AuthDTO authDTO) {
+    public ResponseEntity<String> login(@RequestBody @Validated AuthDTO authDTO) {
         var userPassword = new UsernamePasswordAuthenticationToken(authDTO.email(), authDTO.password());
-        authenticationManager.authenticate(userPassword);
-        return ResponseEntity.ok().build();
+        var auth =  authenticationManager.authenticate(userPassword);
+
+        var token  = tokenService.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok().body(token);
     }
 
     @PostMapping("/register")
